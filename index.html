@@ -10,8 +10,8 @@
   h1 { font-size:19px; letter-spacing:0.5px; }
   ol { font-size:14px; line-height:1.8; color:#4D4E48; padding-left:20px; }
   .sig { border:1px dashed #A38D66; padding:16px; margin:14px 0 22px; overflow-x:auto; }
-  .sig .inner { transform-origin:left top; }
-  @media (max-width:560px) { .sig .inner { transform:scale(0.62); } .sig { height:132px; overflow:hidden; } }
+  .sig .inner { display:inline-block; }
+  .scrollnote { font-size:11px; color:#85827B; margin:-8px 0 16px; }
   button { display:block; width:100%; padding:14px; font-size:16px; font-weight:bold; color:#fff;
            background:#24292D; border:0; border-radius:8px; cursor:pointer; -webkit-appearance:none; }
   button:active { background:#A38D66; }
@@ -27,7 +27,13 @@
     <li>Tap the <b>Copy signature</b> button below.</li>
     <li>Go to <b>Settings &rarr; Mail &rarr; Signature</b>.</li>
     <li><b>Paste.</b> It will look plain &mdash; that's normal.</li>
-    <li><b>Shake the phone</b>, then tap <b>Undo Change Attributes</b>. The design comes back.</li>
+    <li><b>Undo</b> to restore the design &mdash; any one of these works:
+      <ul>
+        <li><b>Swipe left with three fingers</b> on the signature box, or</li>
+        <li><b>Shake the phone</b> and tap <b>Undo Change Attributes</b><br>
+            <span class="note">(needs Settings &rarr; Accessibility &rarr; Touch &rarr; <b>Shake to Undo</b> turned on)</span></li>
+      </ul>
+    </li>
     <li>Back out to save. Send yourself a test email to confirm.</li>
   </ol>
 
@@ -47,6 +53,7 @@
 </tr>
 </table>
   </div></div>
+  <p class="scrollnote">The preview scrolls sideways &mdash; the button copies the whole thing regardless.</p>
   <button id="copy">Copy signature</button>
   <span id="status"></span>
 
