@@ -15,9 +15,13 @@
   button { display:block; width:100%; padding:14px; font-size:16px; font-weight:bold; color:#fff;
            background:#24292D; border:0; border-radius:8px; cursor:pointer; -webkit-appearance:none; }
   button:active { background:#A38D66; }
-  #status { display:block; text-align:center; font-size:13px; color:#2D6A4F; min-height:20px; margin-top:10px; }
+  #status, #status2 { display:block; text-align:center; font-size:13px; color:#2D6A4F; min-height:20px; margin-top:10px; }
   .cap { font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#A38D66; margin-bottom:8px; }
   .note { font-size:12px; color:#85827B; line-height:1.6; }
+  h2 { font-size:15px; margin-top:38px; padding-top:22px; border-top:2px solid #A38D66; }
+  .plain { border:1px dashed #A38D66; padding:16px; margin:14px 0; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+           font-size:13px; line-height:1.7; color:#24292D; white-space:pre-wrap; }
+  button.alt { background:#4D4E48; }
 </style>
 </head>
 <body>
@@ -57,6 +61,27 @@
   <button id="copy">Copy signature</button>
   <span id="status"></span>
 
+  <h2>If the design won't stick</h2>
+  <p class="note">iOS strips styling when you paste into the signature box, and the Undo step is what brings it back.
+  If Undo isn't working on your build, try these in order:</p>
+  <ol>
+    <li>Paste into the <b>Notes</b> app first, then copy it <i>from Notes</i> and paste into the signature box.</li>
+    <li>Copy from the page on a <b>Mac</b> and paste on the phone via Universal Clipboard.</li>
+    <li>Still nothing? It's likely an OS bug &mdash; use the plain-text version below, which can't break.</li>
+  </ol>
+
+  <h2>Plan B &mdash; plain text signature</h2>
+  <p class="note">No images, no styling to lose. Looks deliberate rather than broken, and works on every phone and mail app &mdash; including the Gmail app.</p>
+  <div class="plain" id="plainsig">Justen Blackstone
+Founder &middot; The Foundry Recording Studio
+(484) 456-9408 &middot; jblackstone@thefoundryrecordingstudio.com
+1885 W Market St, Bethlehem, PA 18018
+thefoundryrecordingstudio.com
+
+Plug In. Sound Better.</div>
+  <button class="alt" id="copyplain">Copy plain-text version</button>
+  <span id="status2"></span>
+
   <p class="note">Works in the iPhone <b>Mail</b> app. The Gmail iPhone app only supports plain-text signatures &mdash; that's a Google limitation, not a setup problem.</p>
 </div>
 <script>
@@ -78,6 +103,23 @@ document.getElementById("copy").addEventListener("click", async () => {
     status.textContent = "Copied \u2014 now paste into Settings \u2192 Mail \u2192 Signature.";
   } catch (e) {
     status.textContent = "Couldn't copy automatically \u2014 press and hold the preview to select it.";
+  }
+});
+
+document.getElementById("copyplain").addEventListener("click", async () => {
+  const text = document.getElementById("plainsig").innerText;
+  const status = document.getElementById("status2");
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      const ta = document.createElement("textarea");
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      document.execCommand("copy"); document.body.removeChild(ta);
+    }
+    status.textContent = "Copied \u2014 paste into Settings \u2192 Mail \u2192 Signature.";
+  } catch (e) {
+    status.textContent = "Couldn't copy \u2014 press and hold the text above to select it.";
   }
 });
 </script>
