@@ -9,7 +9,13 @@
   .wrap { max-width:640px; margin:0 auto; padding:24px 18px 60px; }
   h1 { font-size:19px; letter-spacing:0.5px; }
   ol { font-size:14px; line-height:1.8; color:#4D4E48; padding-left:20px; }
-  .sig { border:1px dashed #A38D66; padding:16px; margin:22px 0; overflow-x:auto; }
+  .sig { border:1px dashed #A38D66; padding:16px; margin:14px 0 22px; overflow-x:auto; }
+  .sig .inner { transform-origin:left top; }
+  @media (max-width:560px) { .sig .inner { transform:scale(0.62); } .sig { height:132px; overflow:hidden; } }
+  button { display:block; width:100%; padding:14px; font-size:16px; font-weight:bold; color:#fff;
+           background:#24292D; border:0; border-radius:8px; cursor:pointer; -webkit-appearance:none; }
+  button:active { background:#A38D66; }
+  #status { display:block; text-align:center; font-size:13px; color:#2D6A4F; min-height:20px; margin-top:10px; }
   .cap { font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#A38D66; margin-bottom:8px; }
   .note { font-size:12px; color:#85827B; line-height:1.6; }
 </style>
@@ -18,15 +24,15 @@
 <div class="wrap">
   <h1>Foundry signature &mdash; iPhone setup</h1>
   <ol>
-    <li>Press and hold on the signature below, then <b>Select All</b> &rarr; <b>Copy</b>.</li>
+    <li>Tap the <b>Copy signature</b> button below.</li>
     <li>Go to <b>Settings &rarr; Mail &rarr; Signature</b>.</li>
     <li><b>Paste.</b> It will look plain &mdash; that's normal.</li>
     <li><b>Shake the phone</b>, then tap <b>Undo Change Attributes</b>. The design comes back.</li>
     <li>Back out to save. Send yourself a test email to confirm.</li>
   </ol>
 
-  <div class="cap">Copy everything inside the dashed box</div>
-  <div class="sig">
+  <div class="cap">Preview</div>
+  <div class="sig"><div class="inner" id="sig">
 <table cellpadding="0" cellspacing="0" border="0" style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-weight:300;">
 <tr>
 <td style="border-right:2px solid #A38D66;padding:2px 18px 2px 0;vertical-align:middle;">
@@ -40,9 +46,33 @@
 <td style="padding:0 0 0 18px;vertical-align:middle;"><a href="https://thefoundryrecordingstudio.com" style="text-decoration:none;"><img src="signature/foundry-signature.gif" width="150" height="104" alt="The Foundry Recording Studio" style="display:block;border:0;"></a></td>
 </tr>
 </table>
-  </div>
+  </div></div>
+  <button id="copy">Copy signature</button>
+  <span id="status"></span>
 
   <p class="note">Works in the iPhone <b>Mail</b> app. The Gmail iPhone app only supports plain-text signatures &mdash; that's a Google limitation, not a setup problem.</p>
 </div>
+<script>
+document.getElementById("copy").addEventListener("click", async () => {
+  const node = document.getElementById("sig");
+  const status = document.getElementById("status");
+  const html = node.innerHTML;
+  try {
+    if (navigator.clipboard && window.ClipboardItem) {
+      await navigator.clipboard.write([new ClipboardItem({
+        "text/html": new Blob([html], {type: "text/html"}),
+        "text/plain": new Blob([node.innerText], {type: "text/plain"})
+      })]);
+    } else {
+      const r = document.createRange(); r.selectNodeContents(node);
+      const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      document.execCommand("copy"); sel.removeAllRanges();
+    }
+    status.textContent = "Copied \u2014 now paste into Settings \u2192 Mail \u2192 Signature.";
+  } catch (e) {
+    status.textContent = "Couldn't copy automatically \u2014 press and hold the preview to select it.";
+  }
+});
+</script>
 </body>
 </html>
